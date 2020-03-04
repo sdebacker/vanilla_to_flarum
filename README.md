@@ -10,3 +10,9 @@ There are some more work to be done :
 - The `misc.php` importer is not working yet, it should be adapted to Vanilla forums.
 
 This script is an adaptation of some parts of https://github.com/mondediefr/fluxbb_to_flarum.
+
+## Use
+
+- Download this repository to a folder accessible by a navigator.
+- Duplicate and rename `.env.example` to `.env` and fill it.
+- Open your browser and navigate to this importer.
