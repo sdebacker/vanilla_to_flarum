@@ -8,6 +8,8 @@ There are some more work to be done :
 - When importing the groups, we loose the possibility to manage the forum settings
 - After inserting posts, the columns `last_post_id` and `participant_count` should be updated.
 - The `misc.php` importer is not working yet, it should be adapted to Vanilla forums.
+- The format (HTML, BB, Markdown) of the messages have to be correctly converted.
+- The internal links in the posts have to be converted.
 
 This script is an adaptation of some parts of https://github.com/mondediefr/fluxbb_to_flarum.
 
