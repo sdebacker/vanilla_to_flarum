@@ -45,7 +45,7 @@ foreach ($discussions as $discussion) {
     $query = RunPreparedQuery($dbVanilla, [':DiscussionID' => $discussion['DiscussionID']], "SELECT * FROM ${dbVanillaPrefix}Comment WHERE DiscussionID = :DiscussionID ORDER BY CommentID");
     $posts = $query->fetchAll(PDO::FETCH_ASSOC);
 
-    $currentPostNumber = 0;
+    $currentPostNumber = 1;
 
     // Treat all posts from current topic
     foreach ($posts as $post) {
@@ -102,6 +102,40 @@ foreach ($discussions as $discussion) {
         ':discussion_id' => $discussion['DiscussionID'],
         ':tag_id' => $row['CategoryID'],
     ], "INSERT INTO ${dbFlarumPrefix}discussion_tag(discussion_id, tag_id) VALUES(:discussion_id, :tag_id)");
+}
+foreach ($discussions as $discussion) {
+    // Insert the first post in the table posts.
+
+    $content = $discussion['Body'];
+    foreach ($smileys as $smiley) {
+        $quotedSmiley = preg_quote($smiley[1], '#');
+        $match = '#(?<=\s|^)('.$quotedSmiley.')(?=\s|$)#'; // a space is required before and after the pattern
+        $content = preg_replace($match, '[img]/assets/images/smileys/'.$smiley[0].'[/img]', $content);
+    }
+    $content = TextFormatter::parse(ReplaceUnsupportedMarks($content));
+
+    $firstPostData = [
+        ':discussion_id' => $discussion['DiscussionID'],
+        ':number' => 1,
+        ':created_at' => $discussion['DateInserted'],
+        ':user_id' => $discussion['InsertUserID'],
+        ':type' => 'comment',
+        ':content' => $content,
+        ':edited_at' => $discussion['DateUpdated'] ?: null,
+        ':edited_user_id' => $discussion['UpdateUserID'] ? GetUserID($discussion['UpdateUserID']) : null,
+        ':ip_address' => null,
+        ':is_approved' => 1,
+    ];
+
+    $query = RunPreparedQuery($dbFlarum, $firstPostData, "INSERT INTO ${dbFlarumPrefix}posts(discussion_id,number,created_at,user_id,type,content,edited_at,edited_user_id,ip_address,is_approved) VALUES(:discussion_id,:number,:created_at,:user_id,:type,:content,:edited_at,:edited_user_id,:ip_address,:is_approved)");
+
+    $firstPostId = $dbFlarum->lastInsertId();
+
+    // Update the first_post_id in the discussions table.
+    $query = RunPreparedQuery($dbFlarum, [
+        ':id' => $discussion['DiscussionID'],
+        ':first_post_id' => $firstPostId,
+    ], "UPDATE ${dbFlarumPrefix}discussions SET first_post_id=:first_post_id WHERE id=:id");
 }
 
 WriteInLog('Done, results :');
