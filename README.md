@@ -10,6 +10,7 @@ There are some more work to be done :
 - The `misc.php` importer is not working yet, it should be adapted to Vanilla forums.
 - The format (HTML, BB, Markdown) of the messages have to be correctly converted.
 - The internal links in the posts have to be converted.
+- The Following discussions could be transfered.
 
 This script is an adaptation of some parts of https://github.com/mondediefr/fluxbb_to_flarum.
 
