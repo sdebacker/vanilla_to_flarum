@@ -1,4 +1,4 @@
-# vanilla_to_flarum
+# Vanilla to Flarum database converter
 Convert the database of Vanilla Forum to Flarum.
 
 Currently you can import users, groups, discussions, posts and tags.
