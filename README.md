@@ -11,7 +11,7 @@ There are some more work to be done :
 
 This script is an adaptation of some parts of https://github.com/mondediefr/fluxbb_to_flarum.
 
-## Use
+## Usage
 
 - Download this repository to a folder accessible by a navigator.
 - Duplicate and rename `.env.example` to `.env` and fill it.
