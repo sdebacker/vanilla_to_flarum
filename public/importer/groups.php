@@ -1,7 +1,7 @@
 <?php
 
 WriteInLog('###################################');
-WriteInLog('### [4/5] User groups migration ###');
+WriteInLog('### [4/6] User groups migration ###');
 WriteInLog('###################################');
 
 $query = RunQuery($dbVanilla, "SELECT * FROM `${dbVanillaPrefix}Role`");

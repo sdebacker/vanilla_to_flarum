@@ -1,7 +1,7 @@
 <?php
 
 WriteInLog('##################################');
-WriteInLog('### [2/5] Categories migration ###');
+WriteInLog('### [2/6] Categories migration ###');
 WriteInLog('##################################');
 
 $query = RunQuery($dbVanilla, "SELECT CategoryID, Name, Sort, UrlCode, Description, CountDiscussions FROM `${dbVanillaPrefix}Category`");

@@ -1,7 +1,7 @@
 <?php
 
 WriteInLog('#############################');
-WriteInLog('### [1/5] Users migration ###');
+WriteInLog('### [1/6] Users migration ###');
 WriteInLog('#############################');
 
 $query = RunQuery($dbVanilla, "SELECT UserID, Name, Password, Email, Photo, DateLastActive, DateFirstVisit, CountDiscussions, CountComments, DiscoveryText FROM {$dbVanillaPrefix}User");

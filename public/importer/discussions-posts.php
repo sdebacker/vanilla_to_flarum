@@ -4,7 +4,7 @@ use League\HTMLToMarkdown\HtmlConverter;
 use s9e\TextFormatter\Bundles\Fatdown as TextFormatter;
 
 WriteInLog('########################################');
-WriteInLog('### [3/5] Discussions and posts migration ###');
+WriteInLog('### [3/6] Discussions and posts migration ###');
 WriteInLog('########################################');
 
 $query = RunQuery($dbVanilla, "SELECT * FROM ${dbVanillaPrefix}Discussion");
