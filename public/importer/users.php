@@ -49,7 +49,7 @@ foreach ($users as $user) {
             ':username' => $username,
             ':email' => $user['Email'],
             ':is_email_confirmed' => 1,
-            ':password' => $user['Password'],
+            ':password' => '',
             ':avatar_url' => $user['Photo'] !== '' && $user['Photo'] !== 'null' ? $user['Photo'] : null,
             ':joined_at' => $user['DateFirstVisit'],
             ':last_seen_at' => $user['DateLastActive'],
