@@ -66,7 +66,6 @@ RunQuery($dbFlarum, "TRUNCATE TABLE `${dbFlarumPrefix}groups`");
 RunQuery($dbFlarum, "TRUNCATE TABLE `${dbFlarumPrefix}group_user`");
 RunQuery($dbFlarum, 'SET FOREIGN_KEY_CHECKS = 1');
 
-require 'importer/smileys.php';
 require 'importer/users.php';
 require 'importer/categories.php';
 require 'importer/discussions-posts.php';

@@ -59,12 +59,6 @@ foreach ($discussions as $discussion) {
 
         $content = $post['Body'];
 
-        // foreach ($smileys as $smiley) {
-        //     $quotedSmiley = preg_quote($smiley[1], '#');
-        //     $match = '#(?<=\s|^)('.$quotedSmiley.')(?=\s|$)#'; // a space is required before and after the pattern
-        //     $content = preg_replace($match, '[img]/assets/images/smileys/'.$smiley[0].'[/img]', $content);
-        // }
-
         $content = (new HtmlConverter())->convert($content);
         $content = TextFormatter::parse(ReplaceUnsupportedMarks($content));
 
@@ -109,11 +103,6 @@ foreach ($discussions as $discussion) {
     // Insert the first post in the table posts.
 
     $content = $discussion['Body'];
-    // foreach ($smileys as $smiley) {
-    //     $quotedSmiley = preg_quote($smiley[1], '#');
-    //     $match = '#(?<=\s|^)('.$quotedSmiley.')(?=\s|$)#'; // a space is required before and after the pattern
-    //     $content = preg_replace($match, '[img]/assets/images/smileys/'.$smiley[0].'[/img]', $content);
-    // }
 
     $content = (new HtmlConverter())->convert($content);
     $content = TextFormatter::parse(ReplaceUnsupportedMarks($content));
