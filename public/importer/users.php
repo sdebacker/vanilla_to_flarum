@@ -4,7 +4,7 @@ WriteInLog('#############################');
 WriteInLog('### [1/5] Users migration ###');
 WriteInLog('#############################');
 
-$query = RunQuery($dbVanilla, "SELECT UserID, Name, Password, Email, Photo, DateLastActive, DateFirstVisit, CountDiscussions, CountComments, DiscoveryText FROM ${dbVanillaPrefix}User");
+$query = RunQuery($dbVanilla, "SELECT UserID, Name, Password, Email, Photo, DateLastActive, DateFirstVisit, CountDiscussions, CountComments, DiscoveryText FROM {$dbVanillaPrefix}User");
 $users = $query->fetchAll(PDO::FETCH_ASSOC);
 
 WriteInLog('Migrating '.$query->rowCount().' users...');
@@ -36,11 +36,10 @@ foreach ($users as $user) {
                 ++$usersIgnored;
                 WriteInLog("Unable to clean username '".$user['Name']."', try to fix this account manually. Proposed nickname : '".$username."' (already exists in fluxbb database)", 'ERROR');
                 continue;
-            } else {
-                ++$usersCleaned;
-                WriteInLog("User '".$user['Name']."' cleaned (incorrect format). New nickname : '".$username."'", 'WARN');
-                //SendNotificationToUser($user['email'], $user['Name'], $username);
             }
+            ++$usersCleaned;
+            WriteInLog("User '".$user['Name']."' cleaned (incorrect format). New nickname : '".$username."'", 'WARN');
+        //SendNotificationToUser($user['email'], $user['Name'], $username);
         } else {
             $username = $user['Name'];
         }
@@ -67,8 +66,8 @@ foreach ($users as $user) {
 }
 
 WriteInLog('Done, results :');
-WriteInLog("$usersMigrated user(s) migrated successfully", 'SUCCESS');
-WriteInLog("$usersIgnored user(s) ignored (guest account + those without mail address + accounts not cleaned)", 'SUCCESS');
-WriteInLog("$usersCleaned user(s) cleaned (incorrect format)", 'SUCCESS');
-WriteInLog("$signatureMigrated signature(s) cleaned and migrated successfully", 'SUCCESS');
-WriteInLog("$avatarMigrated avatar(s) migrated successfully", 'SUCCESS');
+WriteInLog("{$usersMigrated} user(s) migrated successfully", 'SUCCESS');
+WriteInLog("{$usersIgnored} user(s) ignored (guest account + those without mail address + accounts not cleaned)", 'SUCCESS');
+WriteInLog("{$usersCleaned} user(s) cleaned (incorrect format)", 'SUCCESS');
+WriteInLog("{$signatureMigrated} signature(s) cleaned and migrated successfully", 'SUCCESS');
+WriteInLog("{$avatarMigrated} avatar(s) migrated successfully", 'SUCCESS');
