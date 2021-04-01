@@ -43,32 +43,33 @@ $mailPass = getenv('MAILPASS');
 WriteInLog('------------------- STARTING MIGRATION PROCESS -------------------');
 
 try {
-    $dbVanilla = new PDO("mysql:host=$dbHost;dbname=$dbVanillaName;charset=utf8", $dbVanillaUser, $dbVanillaPass);
-    $dbFlarum = new PDO("mysql:host=$dbHost;dbname=$dbFlarumName;charset=utf8", $dbFlarumUser, $dbFlarumPass);
+    $dbVanilla = new PDO("mysql:host={$dbHost};dbname={$dbVanillaName};charset=utf8", $dbVanillaUser, $dbVanillaPass);
+    $dbFlarum = new PDO("mysql:host={$dbHost};dbname={$dbFlarumName};charset=utf8", $dbFlarumUser, $dbFlarumPass);
     // Enabling PDO exceptions
     $dbVanilla->setAttribute(PDO::ATTR_ERRMODE, PDO::ERRMODE_EXCEPTION);
     $dbFlarum->setAttribute(PDO::ATTR_ERRMODE, PDO::ERRMODE_EXCEPTION);
 } catch (Exception $e) {
     WriteInLog($e, 'ERROR');
-    die('/!\ An error occurred while connecting to the databases');
+    exit('/!\ An error occurred while connecting to the databases');
 }
 
 WriteInLog('Connected successfully to the databases !');
 
 RunQuery($dbFlarum, 'SET FOREIGN_KEY_CHECKS = 0');
-RunQuery($dbFlarum, "TRUNCATE TABLE `${dbFlarumPrefix}users`");
-RunQuery($dbFlarum, "TRUNCATE TABLE `${dbFlarumPrefix}tags`");
-RunQuery($dbFlarum, "TRUNCATE TABLE `${dbFlarumPrefix}discussions`");
-RunQuery($dbFlarum, "TRUNCATE TABLE `${dbFlarumPrefix}discussion_tag`");
-RunQuery($dbFlarum, "TRUNCATE TABLE `${dbFlarumPrefix}discussion_user`");
-RunQuery($dbFlarum, "TRUNCATE TABLE `${dbFlarumPrefix}posts`");
-RunQuery($dbFlarum, "TRUNCATE TABLE `${dbFlarumPrefix}groups`");
-RunQuery($dbFlarum, "TRUNCATE TABLE `${dbFlarumPrefix}group_user`");
+RunQuery($dbFlarum, "TRUNCATE TABLE `{$dbFlarumPrefix}users`");
+RunQuery($dbFlarum, "TRUNCATE TABLE `{$dbFlarumPrefix}tags`");
+RunQuery($dbFlarum, "TRUNCATE TABLE `{$dbFlarumPrefix}discussions`");
+RunQuery($dbFlarum, "TRUNCATE TABLE `{$dbFlarumPrefix}discussion_tag`");
+RunQuery($dbFlarum, "TRUNCATE TABLE `{$dbFlarumPrefix}discussion_user`");
+RunQuery($dbFlarum, "TRUNCATE TABLE `{$dbFlarumPrefix}posts`");
+RunQuery($dbFlarum, "TRUNCATE TABLE `{$dbFlarumPrefix}groups`");
+RunQuery($dbFlarum, "TRUNCATE TABLE `{$dbFlarumPrefix}group_user`");
 RunQuery($dbFlarum, 'SET FOREIGN_KEY_CHECKS = 1');
 
 require 'importer/users.php';
 require 'importer/categories.php';
 require 'importer/discussions-posts.php';
+require 'importer/discussions-read-status.php';
 require 'importer/groups.php';
 // require 'importer/misc.php';
 
@@ -77,4 +78,4 @@ $diff = $timestamp_end - $timestamp_start;
 $min = floor($diff / 60);
 $sec = floor($diff - $min * 60);
 
-WriteInLog("---------------------- END OF MIGRATION (time : $min min $sec sec) ----------------------");
+WriteInLog("---------------------- END OF MIGRATION (time : {$min} min {$sec} sec) ----------------------");

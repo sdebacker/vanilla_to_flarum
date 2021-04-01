@@ -7,7 +7,7 @@ WriteInLog('########################################');
 WriteInLog('### [3/6] Discussions and posts migration ###');
 WriteInLog('########################################');
 
-$query = RunQuery($dbVanilla, "SELECT * FROM ${dbVanillaPrefix}Discussion");
+$query = RunQuery($dbVanilla, "SELECT * FROM {$dbVanillaPrefix}Discussion");
 $discussions = $query->fetchAll(PDO::FETCH_ASSOC);
 WriteInLog('Migrating '.$query->rowCount().' discussions...');
 
@@ -39,11 +39,11 @@ foreach ($discussions as $discussion) {
 
     // TODO: After inserting posts, update first_post_id, last_post_id and participant_count
 
-    $query = RunPreparedQuery($dbFlarum, $discussionData, "INSERT INTO ${dbFlarumPrefix}discussions(id,title,comment_count,participant_count,post_number_index,created_at,user_id,first_post_id,last_posted_at,last_posted_user_id,last_post_id,last_post_number,slug,is_approved,is_locked,is_sticky) VALUES(:id,:title,:comment_count,:participant_count,:post_number_index,:created_at,:user_id,:first_post_id,:last_posted_at,:last_posted_user_id,:last_post_id,:last_post_number,:slug,:is_approved,:is_locked,:is_sticky)");
+    $query = RunPreparedQuery($dbFlarum, $discussionData, "INSERT INTO {$dbFlarumPrefix}discussions(id,title,comment_count,participant_count,post_number_index,created_at,user_id,first_post_id,last_posted_at,last_posted_user_id,last_post_id,last_post_number,slug,is_approved,is_locked,is_sticky) VALUES(:id,:title,:comment_count,:participant_count,:post_number_index,:created_at,:user_id,:first_post_id,:last_posted_at,:last_posted_user_id,:last_post_id,:last_post_number,:slug,:is_approved,:is_locked,:is_sticky)");
     $discussionsMigrated += $query->rowCount();
 
     // Posts
-    $query = RunPreparedQuery($dbVanilla, [':DiscussionID' => $discussion['DiscussionID']], "SELECT * FROM ${dbVanillaPrefix}Comment WHERE DiscussionID = :DiscussionID ORDER BY CommentID");
+    $query = RunPreparedQuery($dbVanilla, [':DiscussionID' => $discussion['DiscussionID']], "SELECT * FROM {$dbVanillaPrefix}Comment WHERE DiscussionID = :DiscussionID ORDER BY CommentID");
     $posts = $query->fetchAll(PDO::FETCH_ASSOC);
 
     $currentPostNumber = 1;
@@ -76,7 +76,7 @@ foreach ($discussions as $discussion) {
             ':is_approved' => 1,
         ];
 
-        $query = RunPreparedQuery($dbFlarum, $postData, "INSERT INTO ${dbFlarumPrefix}posts(id,discussion_id,number,created_at,user_id,type,content,edited_at,edited_user_id,ip_address,is_approved) VALUES(:id,:discussion_id,:number,:created_at,:user_id,:type,:content,:edited_at,:edited_user_id,:ip_address,:is_approved)");
+        $query = RunPreparedQuery($dbFlarum, $postData, "INSERT INTO {$dbFlarumPrefix}posts(id,discussion_id,number,created_at,user_id,type,content,edited_at,edited_user_id,ip_address,is_approved) VALUES(:id,:discussion_id,:number,:created_at,:user_id,:type,:content,:edited_at,:edited_user_id,:ip_address,:is_approved)");
         $postsMigrated += $query->rowCount();
     }
 
@@ -84,12 +84,12 @@ foreach ($discussions as $discussion) {
     // Topic/tags link
     //
 
-    $query = RunPreparedQuery($dbVanilla, [':CategoryID' => $discussion['CategoryID']], "SELECT * FROM ${dbVanillaPrefix}Category WHERE CategoryID = :CategoryID");
+    $query = RunPreparedQuery($dbVanilla, [':CategoryID' => $discussion['CategoryID']], "SELECT * FROM {$dbVanillaPrefix}Category WHERE CategoryID = :CategoryID");
     $row = $query->fetch(PDO::FETCH_ASSOC);
     // Link the topic with a primary tag (vanilla category)
     if ($row['CategoryID'] == '-1') {
         // Set it to Vanilla’s Root category.
-        $queryRootCategoryId = RunQuery($dbFlarum, "SELECT id FROM `${dbFlarumPrefix}tags` WHERE `slug`='root'");
+        $queryRootCategoryId = RunQuery($dbFlarum, "SELECT id FROM `{$dbFlarumPrefix}tags` WHERE `slug`='root'");
         $RootCategory = $queryRootCategoryId->fetch(PDO::FETCH_ASSOC);
         $row['CategoryID'] = $RootCategory['id'];
     }
@@ -97,7 +97,7 @@ foreach ($discussions as $discussion) {
     RunPreparedQuery($dbFlarum, [
         ':discussion_id' => $discussion['DiscussionID'],
         ':tag_id' => $row['CategoryID'],
-    ], "INSERT INTO ${dbFlarumPrefix}discussion_tag(discussion_id, tag_id) VALUES(:discussion_id, :tag_id)");
+    ], "INSERT INTO {$dbFlarumPrefix}discussion_tag(discussion_id, tag_id) VALUES(:discussion_id, :tag_id)");
 }
 foreach ($discussions as $discussion) {
     // Insert the first post in the table posts.
@@ -120,7 +120,7 @@ foreach ($discussions as $discussion) {
         ':is_approved' => 1,
     ];
 
-    $query = RunPreparedQuery($dbFlarum, $firstPostData, "INSERT INTO ${dbFlarumPrefix}posts(discussion_id,number,created_at,user_id,type,content,edited_at,edited_user_id,ip_address,is_approved) VALUES(:discussion_id,:number,:created_at,:user_id,:type,:content,:edited_at,:edited_user_id,:ip_address,:is_approved)");
+    $query = RunPreparedQuery($dbFlarum, $firstPostData, "INSERT INTO {$dbFlarumPrefix}posts(discussion_id,number,created_at,user_id,type,content,edited_at,edited_user_id,ip_address,is_approved) VALUES(:discussion_id,:number,:created_at,:user_id,:type,:content,:edited_at,:edited_user_id,:ip_address,:is_approved)");
 
     $firstPostId = $dbFlarum->lastInsertId();
 
@@ -128,10 +128,10 @@ foreach ($discussions as $discussion) {
     $query = RunPreparedQuery($dbFlarum, [
         ':id' => $discussion['DiscussionID'],
         ':first_post_id' => $firstPostId,
-    ], "UPDATE ${dbFlarumPrefix}discussions SET first_post_id=:first_post_id WHERE id=:id");
+    ], "UPDATE {$dbFlarumPrefix}discussions SET first_post_id=:first_post_id WHERE id=:id");
 }
 
 WriteInLog('Done, results :');
-WriteInLog("$discussionsMigrated topic(s) migrated successfully", 'SUCCESS');
-WriteInLog("$postsMigrated post(s) migrated successfully", 'SUCCESS');
-WriteInLog("$discussionsIgnored topic(s) ignored (moved discussions)", 'SUCCESS');
+WriteInLog("{$discussionsMigrated} topic(s) migrated successfully", 'SUCCESS');
+WriteInLog("{$postsMigrated} post(s) migrated successfully", 'SUCCESS');
+WriteInLog("{$discussionsIgnored} topic(s) ignored (moved discussions)", 'SUCCESS');
