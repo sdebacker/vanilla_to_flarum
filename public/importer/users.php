@@ -34,7 +34,7 @@ foreach ($users as $user) {
 
             if ($row['id']) {
                 ++$usersIgnored;
-                WriteInLog("Unable to clean username '".$user['Name']."', try to fix this account manually. Proposed nickname : '".$username."' (already exists in fluxbb database)", 'ERROR');
+                WriteInLog("Unable to clean username '".$user['Name']."', try to fix this account manually. Proposed nickname : '".$username."' (already exists in vanilla database)", 'ERROR');
                 continue;
             }
             ++$usersCleaned;
