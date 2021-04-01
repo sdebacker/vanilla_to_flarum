@@ -17,10 +17,11 @@ foreach ($statuses as $status) {
     $statusData = [
         ':user_id' => (int) $status['UserID'],
         ':discussion_id' => (int) $status['DiscussionID'],
+        ':last_read_post_number' => (int) $status['CountComments'],
         ':last_read_at' => $status['DateLastViewed'],
     ];
     try {
-        $query = $dbFlarum->prepare("INSERT INTO {$dbFlarumPrefix}discussion_user(user_id,discussion_id,last_read_at) VALUES(:user_id,:discussion_id,:last_read_at)");
+        $query = $dbFlarum->prepare("INSERT INTO {$dbFlarumPrefix}discussion_user(user_id,discussion_id,last_read_post_number,last_read_at) VALUES(:user_id,:discussion_id,:last_read_post_number,:last_read_at)");
         $query->execute($statusData);
         $statusesMigrated += $query->rowCount();
     } catch (Exception $e) {
