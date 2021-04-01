@@ -55,11 +55,10 @@ foreach ($users as $user) {
             ':joined_at' => $user['DateFirstVisit'],
             ':last_seen_at' => $user['DateLastActive'],
             ':comment_count' => $user['CountComments'] ?? 0,
-            ':bio' => $user['DiscoveryText'] !== '' ? $user['DiscoveryText'] : null,
             ':discussion_count' => $user['CountDiscussions'] ?? 0,
         ];
 
-        $query = RunPreparedQuery($dbFlarum, $userData, "INSERT INTO ${dbFlarumPrefix}users(id,username,email,is_email_confirmed,password,avatar_url,joined_at,last_seen_at,comment_count,bio,discussion_count) VALUES(:id,:username,:email,:is_email_confirmed,:password,:avatar_url,:joined_at,:last_seen_at,:comment_count,:bio,:discussion_count)");
+        $query = RunPreparedQuery($dbFlarum, $userData, "INSERT INTO {$dbFlarumPrefix}users(id,username,email,is_email_confirmed,password,avatar_url,joined_at,last_seen_at,comment_count,discussion_count) VALUES(:id,:username,:email,:is_email_confirmed,:password,:avatar_url,:joined_at,:last_seen_at,:comment_count,:discussion_count)");
         $usersMigrated += $query->rowCount();
     } else {
         ++$usersIgnored;
