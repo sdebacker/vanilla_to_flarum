@@ -18,5 +18,6 @@ This script is an adaptation of some parts of https://github.com/mondediefr/flux
 ## Usage
 
 - Download this repository to a folder accessible by a navigator.
+- Enter this repository and run the command `composer install`.
 - Duplicate and rename `.env.example` to `.env` and fill it.
 - Open your browser and navigate to this importer.
